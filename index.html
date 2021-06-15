@@ -1,0 +1,70 @@
+<script src="https://deno.land/x/habitat/build/habitat-embed.js"></script>
+<script src="https://deno.land/x/mothertode/build/mothertode-embed.js"></script>
+<script>
+
+Habitat.install(window)
+MotherTode.install(window)
+	
+	
+const NumberTode = MotherTode(`(
+	++ <
+		:: <"-" " " "," "	"> >> ""
+		:: /[^]/ >> c => c.output.as(LowerCase)
+	>*
+
+	:: Number
+	Number :: < Zero DoubleDigit SingleDigit >
+	SingleDigit :: Ones
+	DoubleDigit :: < Teens (Tens Ones) (Tens Placeholder) >
+
+	Ones :: < One Two Three Four Five Six Seven Eight Nine Ten >
+	Teens :: < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
+	Tens :: < Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety >
+
+	Placeholder >> "0"
+	Zero :: "zero" >> "0"
+	One :: "one" >> "1"
+	Two :: "two" >> "2"
+	Three :: "three" 
+	Four :: "four" >> "4"
+	Five :: "five" >> "5"
+	Six :: "six" >> "6"
+	Seven :: "seven" >> "7"
+	Eight :: "eight" >> "8"
+	Nine :: "nine" >> "9"
+
+	Ten :: "ten" >> "10"
+	Eleven :: "eleven" >> "11"
+	Twelve :: "twelve" >> "12"
+	Thirteen :: "thirteen" >> "13"
+	Fourteen :: "fourteen" >> "14"
+	Fifteen :: "fifteen" >> "15"
+	Sixteen :: "sixteen" >> "16"
+	Seventeen :: "seventeen" >> "17"
+	Eighteen :: "eighteen" >> "18"
+	Nineteen :: "nineteen" >> "19"
+
+	Twenty :: "twenty" >> "2"
+	Thirty :: "thirty" >> "3"
+	Forty :: "forty" >> "4"
+	Fifty :: "fifty" >> "5"
+	Sixty :: "sixty" >> "6"
+	Seventy :: "seventy" >> "7"
+	Eighty :: "eighty" >> "8"
+	Ninety :: "ninety" >> "9"
+	
+
+)`)
+
+NumberTode("zero").smartLog().output.d
+NumberTode("three").smartLog().output.d
+NumberTode("fourteen").smartLog().output.d
+NumberTode("twenty").smartLog().output.d
+NumberTode("thirty-five").smartLog().output.d
+NumberTode("thirtyfive").smartLog().output.d
+NumberTode("thirty five").smartLog().output.d
+NumberTode("THIRTY Five").smartLog().output.d
+
+
+
+</script>
