@@ -13,14 +13,20 @@ const NumberTode = MotherTode(`(
 	>*
 
 	:: Number
-	Number :: < Zero TripleDigit DoubleDigit SingleDigit >
-	SingleDigit :: Ones
-	DoubleDigit :: Teens | (Tens SingleDigit|Placeholder)
-	TripleDigit :: Hundreds DoubleDigit|(Placeholder Placeholder)
+	Number :: < Zero FourDigit ThreeDigit TwoDigit OneDigit >
+	OneDigit :: Ones
+	TwoDigit :: Teens | (Tens OneDigitTail)
+	ThreeDigit :: Hundreds TwoDigitTail
+	FourDigit :: Thousands ThreeDigitTail
+
+	OneDigitTail :: OneDigit | Placeholder
+	TwoDigitTail :: TwoDigit | (Placeholder OneDigitTail)
+	ThreeDigitTail :: ThreeDigit | (Placeholder TwoDigitTail)
 
 	Ones :: < One Two Three Four Five Six Seven Eight Nine Ten >
 	Tens :: < Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety >
 	Hundreds :: Ones "hundred" >> ([ones]) => ones.output
+	Thousands :: Ones "thousand" >> ([ones]) => ones.output
 
 	Teens :: < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
 
@@ -59,17 +65,21 @@ const NumberTode = MotherTode(`(
 
 )`)
 
-NumberTode("zero").smartLog().output.d
-NumberTode("three").smartLog().output.d
-NumberTode("fourteen").smartLog().output.d
-NumberTode("twenty").smartLog().output.d
-NumberTode("thirty-five").smartLog().output.d
-NumberTode("thirtyfive").smartLog().output.d
-NumberTode("thirty five").smartLog().output.d
-NumberTode("THIRTY Five").smartLog().output.d
-NumberTode("two hundred").smartLog().output.d
-NumberTode("three hundred and twenty two").smartLog().output.d
-NumberTode("One Hundred, Twenty-Three").smartLog().output.d
+NumberTode("zero").log().output.d
+NumberTode("three").log().output.d
+NumberTode("fourteen").log().output.d
+NumberTode("twenty").log().output.d
+NumberTode("thirty-five").log().output.d
+NumberTode("thirtyfive").log().output.d
+NumberTode("thirty five").log().output.d
+NumberTode("THIRTY Five").log().output.d
+NumberTode("two hundred").log().output.d
+NumberTode("three hundred and twenty two").log().output.d
+NumberTode("One Hundred, Twenty-Three").log().output.d
+NumberTode("four hundred and four").log().output.d
+NumberTode("two thousand and twelve").log().output.d
+NumberTode("One thousand, three hundred and thirty-seven").log().output.d
+
 
 
 
