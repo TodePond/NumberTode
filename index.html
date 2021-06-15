@@ -8,24 +8,27 @@ MotherTode.install(window)
 	
 const NumberTode = MotherTode(`(
 	++ <
-		:: <"-" " " "," "	"> >> ""
+		:: <" and" "-" " " "," "	"> >> ""
 		:: /[^]/ >> c => c.output.as(LowerCase)
 	>*
 
 	:: Number
-	Number :: < Zero DoubleDigit SingleDigit >
+	Number :: < Zero TripleDigit DoubleDigit SingleDigit >
 	SingleDigit :: Ones
-	DoubleDigit :: < Teens (Tens Ones) (Tens Placeholder) >
+	DoubleDigit :: Teens | (Tens SingleDigit|Placeholder)
+	TripleDigit :: Hundreds DoubleDigit|(Placeholder Placeholder)
 
 	Ones :: < One Two Three Four Five Six Seven Eight Nine Ten >
-	Teens :: < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
 	Tens :: < Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety >
+	Hundreds :: Ones "hundred" >> ([ones]) => ones.output
+
+	Teens :: < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
 
 	Placeholder >> "0"
 	Zero :: "zero" >> "0"
 	One :: "one" >> "1"
 	Two :: "two" >> "2"
-	Three :: "three" 
+	Three :: "three" >> "3"
 	Four :: "four" >> "4"
 	Five :: "five" >> "5"
 	Six :: "six" >> "6"
@@ -64,6 +67,9 @@ NumberTode("thirty-five").smartLog().output.d
 NumberTode("thirtyfive").smartLog().output.d
 NumberTode("thirty five").smartLog().output.d
 NumberTode("THIRTY Five").smartLog().output.d
+NumberTode("two hundred").smartLog().output.d
+NumberTode("three hundred and twenty two").smartLog().output.d
+NumberTode("One Hundred, Twenty-Three").smartLog().output.d
 
 
 
