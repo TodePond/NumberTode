@@ -5,15 +5,27 @@
 Habitat.install(window)
 MotherTode.install(window)
 	
-	
 const NumberTode = MotherTode(`(
-	++ <
+	++ Sanitise
+
+	Sanitise <
 		:: <" and" "-" " " "," "	"> >> ""
 		:: /[^]/ >> c => c.output.as(LowerCase)
 	>*
 
 	:: Number
-	Number :: < Zero FourDigit ThreeDigit TwoDigit OneDigit >
+	Number < BinaryOperation Float Integer >
+
+	Integer < Zero FourDigit ThreeDigit TwoDigit OneDigit >
+	Float :: Integer Point (Zero | Ones)+
+	BinaryOperation < AddOperation SubtractOperation >
+
+	AddOperation :: Number~AddOperation Add Number
+	Add :: "plus" | "add" >> " + "
+
+	SubtractOperation :: Number~SubtractOperation Subtract Number
+	Subtract:: "lessthan" | "takeaway" | "minus" >> " - "
+
 	OneDigit :: Ones
 	TwoDigit :: Teens | (Tens OneDigitTail)
 	ThreeDigit :: Hundreds TwoDigitTail
@@ -23,14 +35,16 @@ const NumberTode = MotherTode(`(
 	TwoDigitTail :: TwoDigit | (Placeholder OneDigitTail)
 	ThreeDigitTail :: ThreeDigit | (Placeholder TwoDigitTail)
 
-	Ones :: < One Two Three Four Five Six Seven Eight Nine Ten >
-	Tens :: < Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety >
+	Ones < One Two Three Four Five Six Seven Eight Nine Ten >
+	Tens < Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety >
+	Teens < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
+
 	Hundreds :: Ones "hundred" >> ([ones]) => ones.output
 	Thousands :: Ones "thousand" >> ([ones]) => ones.output
 
-	Teens :: < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
-
 	Placeholder >> "0"
+	Point :: "point" >> "."
+
 	Zero :: "zero" >> "0"
 	One :: "one" >> "1"
 	Two :: "two" >> "2"
@@ -79,6 +93,12 @@ NumberTode("One Hundred, Twenty-Three").log().output.d
 NumberTode("four hundred and four").log().output.d
 NumberTode("two thousand and twelve").log().output.d
 NumberTode("One thousand, three hundred and thirty-seven").log().output.d
+NumberTode("three point one four").log().output.d
+NumberTode("zero point five").log().output.d
+NumberTode("three plus two").log().output.d
+NumberTode("twenty-seven add one").log().output.d
+NumberTode("three add five minus two").log().output.d
+NumberTode("one add one add one add one add one").log().output.d
 
 
 
