@@ -9,16 +9,18 @@ const NumberTode = MotherTode(`(
 	++ Sanitise
 
 	Sanitise <
-		:: <" and" "-" " " "," "	"> >> ""
+		:: <"-" " " "," "	"> >> ""
 		:: /[^]/ >> c => c.output.as(LowerCase)
 	>*
 
 	:: Number
-	Number < BinaryOperation Float Integer >
+	Number < Concatenation BinaryOperation Group Float Integer >
 
 	Integer < Zero FourDigit ThreeDigit TwoDigit OneDigit >
 	Float :: Integer Point (Zero | Ones)+
-	BinaryOperation < AddOperation SubtractOperation >
+	BinaryOperation < AddOperation SubtractOperation DivideOperation >
+	Concatenation :: Number~Concatenation Number
+	Group :: "(" Number ")"
 
 	AddOperation :: Number~AddOperation Add Number
 	Add :: "plus" | "add" >> " + "
@@ -26,10 +28,13 @@ const NumberTode = MotherTode(`(
 	SubtractOperation :: Number~SubtractOperation Subtract Number
 	Subtract:: "lessthan" | "takeaway" | "minus" >> " - "
 
+	DivideOperation :: Number~DivideOperation Divide Number
+	Divide:: ("dividedby" | "sharedinto" ["equal"? "groupsof"]) | "divide" | "over" | "by" >> "/"
+
 	OneDigit :: Ones
 	TwoDigit :: Teens | (Tens OneDigitTail)
-	ThreeDigit :: Hundreds TwoDigitTail
-	FourDigit :: Thousands ThreeDigitTail
+	ThreeDigit :: Hundreds [And] TwoDigitTail
+	FourDigit :: Thousands [And] ThreeDigitTail
 
 	OneDigitTail :: OneDigit | Placeholder
 	TwoDigitTail :: TwoDigit | (Placeholder OneDigitTail)
@@ -39,13 +44,17 @@ const NumberTode = MotherTode(`(
 	Tens < Twenty Thirty Forty Fifty Sixty Seventy Eighty Ninety >
 	Teens < Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen Eighteen Nineteen >
 
-	Hundreds :: Ones "hundred" >> ([ones]) => ones.output
-	Thousands :: Ones "thousand" >> ([ones]) => ones.output
+	Hundreds :: Ones|A "hundred" >> ([ones]) => ones.output
+	Thousands :: Ones|A "thousand" >> ([ones]) => ones.output
 
 	Placeholder >> "0"
 	Point :: "point" >> "."
 
 	Zero :: "zero" >> "0"
+
+	And :: "and" >> ""
+	A :: "a" >> "1"
+
 	One :: "one" >> "1"
 	Two :: "two" >> "2"
 	Three :: "three" >> "3"
@@ -99,6 +108,11 @@ NumberTode("three plus two").log().output.d
 NumberTode("twenty-seven add one").log().output.d
 NumberTode("three add five minus two").log().output.d
 NumberTode("one add one add one add one add one").log().output.d
+NumberTode("twenty twelve").log().output.d
+NumberTode("twelve divided by three").log().output.d
+NumberTode("one over four").log().output.d
+NumberTode("One hundred and two plus three over four").log().output.d
+NumberTode("(One hundred and two plus three) over four").log().output.d
 
 
 
