@@ -13,13 +13,12 @@ const NumberTode = MotherTode(`(
 		:: /[^]/ >> c => c.output.as(LowerCase)
 	>*
 
-	:: Number
-	Number < Concatenation BinaryOperation Group Float Integer >
+	:: Number EOF
+	Number < BinaryOperation Group Float Integer >
 
 	Integer < Zero FourDigit ThreeDigit TwoDigit OneDigit >
 	Float :: Integer Point (Zero | Ones)+
 	BinaryOperation < AddOperation SubtractOperation DivideOperation >
-	Concatenation :: Number~Concatenation Number
 	Group :: "(" Number ")"
 
 	AddOperation :: Number~AddOperation Add Number
@@ -28,8 +27,9 @@ const NumberTode = MotherTode(`(
 	SubtractOperation :: Number~SubtractOperation Subtract Number
 	Subtract:: "lessthan" | "takeaway" | "minus" >> " - "
 
-	DivideOperation :: Number~DivideOperation Divide Number
-	Divide:: ("dividedby" | "sharedinto" ["equal"? "groupsof"]) | "divide" | "over" | "by" >> "/"
+	DivideOperation :: Number~DivideOperation Divide Number [EqualGroups]
+	Divide:: (<"divided" "shared"> <"into" "by"> [EqualGroups "of"]) | "divide" | "over" | "by" >> "/"
+	EqualGroups :: "equal"? "groups" >> ""
 
 	OneDigit :: Ones
 	TwoDigit :: Teens | (Tens OneDigitTail)
@@ -108,7 +108,6 @@ NumberTode("three plus two").log().output.d
 NumberTode("twenty-seven add one").log().output.d
 NumberTode("three add five minus two").log().output.d
 NumberTode("one add one add one add one add one").log().output.d
-NumberTode("twenty twelve").log().output.d
 NumberTode("twelve divided by three").log().output.d
 NumberTode("one over four").log().output.d
 NumberTode("One hundred and two plus three over four").log().output.d
