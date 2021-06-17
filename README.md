@@ -11,4 +11,8 @@ NumberTode("three hundred and twenty two") //322
 NumberTode("One Hundred, Twenty-Three") //123
 NumberTode("two thousand and twelve") //2012
 NumberTode("One-Thousand, Three-Hundred and Seven") //1337
+NumberTode("three point one four") //3.14
+NumberTode("zero point five") //0.5
+NumberTode("three plus two") //3 + 2
+NumberTode("two hundred and one plus seven minus four") //201 + 7 - 4
 ```
